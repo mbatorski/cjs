@@ -54,7 +54,9 @@ class CssReader extends BaseReader {
             }
     
             if(char === '}' && nestedBrackets === 0 && !loop.string.opened) {
-                rules[selector] = replaceNewLines(tempText);
+                const parsed = replaceNewLines(tempText);
+
+                rules[selector] = rules[selector] ? `${rules[selector]};${parsed}` : parsed;
                 selector = '';
                 tempText = '';
                 isBracketOpened = false;
