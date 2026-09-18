@@ -104,9 +104,11 @@ export const _CSSProcessor = {
             const isMediaRule = selector.startsWith("@media");
             const isKeyFrameRule = selector.startsWith("@keyframes");
             const isRangeRule = selector.startsWith("@range");
+            const isWidthRule = selector.startsWith("@width");
+            const isHeightRule = selector.startsWith("@height");
 
-            if (isRangeRule) {
-                const rangeRuleSelector = _CSSRangeRule.processSelector(selector);
+            if (isRangeRule || isWidthRule || isHeightRule) {
+                const rangeRuleSelector = _CSSRangeRule.processSelector(selector, isHeightRule ? "height" : "width");
                 const mediaCss = `${rangeRuleSelector} { ${getModifiedRulesInside(selector, cssText).join("\n")} }`;
 
                 newRules.push(mediaCss);

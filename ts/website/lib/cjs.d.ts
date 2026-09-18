@@ -116,6 +116,8 @@ declare class CjsForm {
 
 type CjsLayoutNode = Constructor$1<CjsComponent> | CjsComponent | CjsLayout | (() => Promise<CjsLayoutNode>) | null | CjsLayoutNode[];
 declare class CjsLayout<TData = any> {
+    _onBeforeLoadCallback: (() => any) | null;
+    _onAfterLoadCallback: (() => any) | null;
     _preSetData: TData | null;
     _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null;
     _layoutObjects: Element[];
@@ -127,8 +129,14 @@ declare class CjsLayout<TData = any> {
     withData(preSetData: TData): CjsLayout;
     withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>): this;
     private createErrorElement;
-    /** Build DOM structure */
+    /**
+     * Build DOM structure
+     *
+     * Does not automatically call the `onBeforeLoad` and `onAfterLoad` callbacks.
+     */
     visualise(): HTMLElement[];
+    onBeforeLoad(onBeforeLoadCallback: () => any): CjsLayout;
+    onAfterLoad(onAfterLoadCallback: () => any): CjsLayout;
     reRender(): void;
 }
 
@@ -149,6 +157,8 @@ declare class CjsComponent<TData = any> {
     _defaultData: Partial<TData>;
     _preSetData: Partial<TData>;
     _id: string | null;
+    /** Custom, user-defined id assigned through {@link withId}. Used to target specific components. */
+    _customId: string | null;
     element: HTMLElement | null;
     static _prototypesData: Map<Function, PrototypeData>;
     /**
@@ -165,6 +175,8 @@ declare class CjsComponent<TData = any> {
     /** Provides the HTML string for the component */
     private getHtml;
     private getConstructorClass;
+    /** Builds the DOM selector used to target the component's rendered elements. */
+    private getSelector;
     /**
      *
      * / 🟢 ------------ PUBLIC SCOPE ------------ 🟢 /
@@ -181,10 +193,12 @@ declare class CjsComponent<TData = any> {
     fillHeight(offset?: number, maxHeight?: number | undefined): void;
     getForms(): CjsForm[] | null;
     getComponents(): CjsComponentsCollection;
+    /** Assigns a custom id to the component so it can be targeted later through {@link CjsComponent.getId} */
+    withId(id: any): this;
     /** Sets the data for the component */
-    withData(data?: Partial<TData> | null): CjsComponent<TData>;
+    withData(data?: Partial<TData> | null): this;
     /** Sets additional style for the component */
-    withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>): CjsComponent<TData>;
+    withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>): this;
     /** Example: render HTML string */
     render(data?: Partial<TData> | null): string;
     /** Example: visualise component as element */
@@ -195,6 +209,14 @@ declare class CjsComponent<TData = any> {
     getFirst(): HTMLElement | null;
     /** Get all occurrences of the CjsComponent as HTMLElement */
     getAll(): NodeListOf<HTMLElement>;
+    /**
+     * Re-renders every rendered occurrence of the component in the DOM.
+     *
+     * When a custom id was set through {@link withId} / {@link CjsComponent.getId} only the
+     * matching occurrences are re-rendered, otherwise every occurrence of the class is updated.
+     * If multiple components match, each one is looped through and replaced individually.
+     */
+    reRender(data?: Partial<TData> | null): this;
     /** Loads CjsLayout inside CjsComponent */
     loadLayout(layout: CjsLayout): void;
     /**
@@ -224,6 +246,19 @@ declare class CjsComponent<TData = any> {
     static withData<T extends CjsComponent<any>>(this: (new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T), data?: Partial<T extends CjsComponent<infer D> ? D : never>): T;
     /** Sets additional style for the component */
     static withStyle<T extends CjsComponent<any>>(this: (new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T), style: Partial<Record<keyof CSSStyleDeclaration, string>>): T;
+    /**
+     * Assigns a custom id to a fresh instance of the component so it can be rendered
+     * and later targeted through {@link CjsComponent.getId}.
+     */
+    static withId<T extends CjsComponent<any>>(this: Constructor<T>, id: any): T;
+    /**
+     * Targets already rendered components of this class that share the given custom id.
+     *
+     * Returns a scoped instance whose chainable methods ({@link withData}, {@link withStyle},
+     * {@link reRender}, {@link getAll}, ...) only affect occurrences matching that id.
+     * When several components share the id, methods loop through each of them.
+     */
+    static getId<T extends CjsComponent<any>>(this: Constructor<T>, id: any): T;
     /** Example: render HTML string */
     static render<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): any;
     /** Example: visualise component as element */
@@ -232,10 +267,12 @@ declare class CjsComponent<TData = any> {
     static querySelector<T extends CjsComponent<any>>(this: Constructor<T>, selectors: string): any;
     /** Other static methods can do the same */
     static fillHeight<T extends CjsComponent<any>>(this: Constructor<T>, offset?: number, maxHeight?: number): any;
+    /** Re-renders every rendered occurrence of the component in the DOM */
+    static reRender<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never> | null): any;
     /** Loads CjsLayout inside CjsComponent */
     static loadLayout<T extends CjsComponent<any>>(this: Constructor<T>, layout: CjsLayout): any;
     /** Get first occurrence of the CjsComponent as HTMLElement */
-    static getFirst<T extends CjsComponent<any>>(this: Constructor<T>): any;
+    static getFirst<T extends CjsComponent<any>>(this: Constructor<T>): AnyHTMLElement;
     /** Get all occurrences of the CjsComponent as HTMLElement */
     static getAll<T extends CjsComponent<any>>(this: Constructor<T>): any;
 }
@@ -305,6 +342,11 @@ declare const CjsObjectUtil: {
 
 declare const CjsStringUtil: {
     getRandom(length: number, safeCharacters?: boolean): string;
+    /**
+     * Provides similarity of two strings (float precision)
+     * @author https://stackoverflow.com/users/6145207/overlord1234
+     */
+    getSimilarity(str1: string, str2: string): number;
     /**
      * Creates a unique numeric ID from a string
      * (DJB2 hash)
@@ -508,6 +550,7 @@ declare class CjsRequest<TResponse = any> {
 }
 declare const CjsRequests: {
     clearCache(): void;
+    setIncludeCredentials(include: boolean): void;
 };
 
 type SearchMode = "query" | "path";

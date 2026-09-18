@@ -1,7 +1,7 @@
 
 
 export const _CSSRangeRule = {
-   processSelector(selector: string) {
+   processSelector(selector: string, dimension: "width" | "height" = "width") {
         const parts = selector.split(" ");
         const determiner = parts[1];
         const value = parts[2];
@@ -20,10 +20,10 @@ export const _CSSRangeRule = {
 
         const { number, unit } = valueParts;
 
-        mapping["<"] = `max-width: ${number - 1}${unit}`;
-        mapping["<="] = `max-width: ${number}${unit}`;
-        mapping[">"] = `min-width: ${number + 1}${unit}`;
-        mapping[">="] = `min-width: ${number}${unit}`;
+        mapping["<"] = `max-${dimension}: ${number - 1}${unit}`;
+        mapping["<="] = `max-${dimension}: ${number}${unit}`;
+        mapping[">"] = `min-${dimension}: ${number + 1}${unit}`;
+        mapping[">="] = `min-${dimension}: ${number}${unit}`;
 
         return `@media only screen and (${
             mapping[determiner]

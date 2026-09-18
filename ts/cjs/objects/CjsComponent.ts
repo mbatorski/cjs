@@ -1,4 +1,4 @@
-import { CjsObjectAttributePrefix, CjsGlobalStyleTagId } from "../constants";
+import { CjsObjectAttributePrefix, CjsGlobalStyleTagId, CjsCustomIdAttributePrefix } from "../constants";
 import { onLoad } from "../events/custom/LoadEvent";
 import { _CSSProcessor } from "../processors/css/CSSProcessor";
 import { AnyHTMLElement, CjsEvent, CjsEventsMap } from "../types";
@@ -39,6 +39,9 @@ export class CjsComponent<TData = any> {
     public _preSetData: Partial<TData> = {};
 
     public _id: string | null = null;
+
+    /** Custom, user-defined id assigned through {@link withId}. Used to target specific components. */
+    public _customId: string | null = null;
 
     public element: HTMLElement | null = null;
 
@@ -160,11 +163,24 @@ export class CjsComponent<TData = any> {
 
         html = _StringHTMLElementsUtil.injectAttribute(html, CjsObjectAttributePrefix, this._id!);
 
+        if(this._customId !== null) {
+            html = _StringHTMLElementsUtil.injectAttribute(html, CjsCustomIdAttributePrefix, this._customId);
+        }
+
         return html;
     }
 
     private getConstructorClass<Args extends any[]>(): new (...args: Args) => this {
         return this.constructor as unknown as new (...args: Args) => this;
+    }
+
+    /** Builds the DOM selector used to target the component's rendered elements. */
+    private getSelector(): string {
+        if(this._customId !== null) {
+            return `[${CjsCustomIdAttributePrefix}="${this._customId}"]`;
+        }
+
+        return `[${CjsObjectAttributePrefix}="${this._id}"]`;
     }
 
     /**
@@ -219,24 +235,32 @@ export class CjsComponent<TData = any> {
     }
 
     public getComponents(): CjsComponentsCollection {
-        return new CjsComponentsCollection(document.body.querySelectorAll(`[${CjsObjectAttributePrefix}="${this._id}"]`));
+        return new CjsComponentsCollection(document.body.querySelectorAll(this.getSelector()));
+    }
+
+    /** Assigns a custom id to the component so it can be targeted later through {@link CjsComponent.getId} */
+    public withId(id: any): this {
+        this._customId = (id === null || id === undefined) ? null : String(id);
+        return this;
     }
 
     /** Sets the data for the component */ 
-    public withData(data: Partial<TData> | null = null): CjsComponent<TData> {
+    public withData(data: Partial<TData> | null = null): this {
         if(data) this._preSetData = CjsObjectUtil.copy(data);
         return this;
     } 
     
     /** Sets additional style for the component */ 
-    public withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>): CjsComponent<TData> { 
+    public withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>): this { 
         this._additionalStyle = CjsObjectUtil.copy(style);
         return this;
     }
 
     /** Example: render HTML string */
     public render(data: Partial<TData> | null = null) {
-        return new (this.getConstructorClass())(data).getHtml();
+        const instance = new (this.getConstructorClass())(data);
+        instance._customId = this._customId;
+        return instance.getHtml();
     }
 
     /** Example: visualise component as element */
@@ -253,12 +277,32 @@ export class CjsComponent<TData = any> {
 
     /** Get first occurrence of the CjsComponent as HTMLElement */
     public getFirst() {
-        return document.body.querySelector<HTMLElement>(`[${CjsObjectAttributePrefix}="${this._id}"]`);
+        return document.body.querySelector<HTMLElement>(this.getSelector());
     }
 
     /** Get all occurrences of the CjsComponent as HTMLElement */
     public getAll() {
-        return document.body.querySelectorAll<HTMLElement>(`[${CjsObjectAttributePrefix}="${this._id}"]`);
+        return document.body.querySelectorAll<HTMLElement>(this.getSelector());
+    }
+
+    /**
+     * Re-renders every rendered occurrence of the component in the DOM.
+     *
+     * When a custom id was set through {@link withId} / {@link CjsComponent.getId} only the
+     * matching occurrences are re-rendered, otherwise every occurrence of the class is updated.
+     * If multiple components match, each one is looped through and replaced individually.
+     */
+    public reRender(data: Partial<TData> | null = null): this {
+        if(data) this._preSetData = CjsObjectUtil.copy(data);
+
+        const elements = this.getAll();
+
+        elements.forEach(element => {
+            const newElement = _DOMElementsUtil.HTMLToElement(this.getHtml());
+            element.replaceWith(newElement);
+        });
+
+        return this;
     }
 
     /** Loads CjsLayout inside CjsComponent */
@@ -379,6 +423,31 @@ export class CjsComponent<TData = any> {
         return (this as StaticCast<T>).getInstance(null, style);
     }
 
+    /**
+     * Assigns a custom id to a fresh instance of the component so it can be rendered
+     * and later targeted through {@link CjsComponent.getId}.
+     */
+    static withId<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        id: any
+    ): T {
+        return ((this as StaticCast<T>).getInstance() as T).withId(id);
+    }
+
+    /**
+     * Targets already rendered components of this class that share the given custom id.
+     *
+     * Returns a scoped instance whose chainable methods ({@link withData}, {@link withStyle},
+     * {@link reRender}, {@link getAll}, ...) only affect occurrences matching that id.
+     * When several components share the id, methods loop through each of them.
+     */
+    static getId<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        id: any
+    ): T {
+        return ((this as StaticCast<T>).getInstance() as T).withId(id);
+    }
+
     /** Example: render HTML string */
     static render<T extends CjsComponent<any>>(
         this: Constructor<T>,
@@ -411,6 +480,14 @@ export class CjsComponent<TData = any> {
         maxHeight?: number
     ) {
         return (this as StaticCast<T>).getInstance().fillHeight(offset, maxHeight);
+    }
+
+    /** Re-renders every rendered occurrence of the component in the DOM */
+    static reRender<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        data: Partial<T extends CjsComponent<infer D> ? D : never> | null = null
+    ) {
+        return (this as StaticCast<T>).getInstance().reRender(data);
     }
 
     /** Loads CjsLayout inside CjsComponent */

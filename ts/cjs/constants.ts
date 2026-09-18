@@ -22,3 +22,4 @@ export const CjsGlobalStyleKeyframesTagId = "cjs-style-keyframes";
 
 export const CjsEventAttributePrefix = "cjsevent-";
 export const CjsObjectAttributePrefix = "cjs_";
+export const CjsCustomIdAttributePrefix = "cjs-id";
