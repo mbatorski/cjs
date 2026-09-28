@@ -26,7 +26,4 @@ export class Credits extends CjsComponent<Data> {
     _events() {
         return {} satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/Credits.css';
 };

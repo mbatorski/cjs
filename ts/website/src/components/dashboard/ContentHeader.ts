@@ -17,7 +17,4 @@ export class ContentHeader extends CjsComponent<Data> {
             </header>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/dashboard/_styles/ContentHeader.css';
 };

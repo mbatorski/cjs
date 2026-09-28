@@ -7,9 +7,6 @@ export class Wrapper extends CjsComponent {
             <section class="wrapper"></section>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/_styles/Wrapper.css';
 };
 
 Wrapper.fillHeight();

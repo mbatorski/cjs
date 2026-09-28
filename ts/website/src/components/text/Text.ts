@@ -21,7 +21,4 @@ export class Text extends CjsComponent {
             </p>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/text/_styles/Text.css';
 };

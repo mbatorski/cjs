@@ -6,7 +6,5 @@ export class Container extends CjsComponent {
             <div class="container"></div>
         `;
     }
-
-    _cssStyle = './src/layouts/root/_styles/Container.css';
 }
 

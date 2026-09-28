@@ -39,5 +39,4 @@ export class ExtendButton extends CjsComponent {
 
     /** Settings */
     _renderData = this.data;
-    _cssStyle = './src/layouts/landing/filters/_styles/ExtendButton.css';
 };

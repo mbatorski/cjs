@@ -55,7 +55,4 @@ export class RangeInput extends CjsComponent<Data> {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/inputs/_styles/RangeInput.css';
 };

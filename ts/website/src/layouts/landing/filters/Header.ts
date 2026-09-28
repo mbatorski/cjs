@@ -10,7 +10,4 @@ export class Header extends CjsComponent {
             </header>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/filters/_styles/Header.css';
 };

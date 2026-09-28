@@ -24,7 +24,4 @@ export class IconButton extends CjsComponent<Data> {
             </button>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/buttons/_styles/IconButton.css';
 };

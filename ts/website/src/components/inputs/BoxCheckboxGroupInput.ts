@@ -93,7 +93,4 @@ export class BoxCheckboxGroupInput extends CjsComponent<Data> {
             </div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/inputs/_styles/BoxCheckboxGroupInput.css';
 };

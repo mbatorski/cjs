@@ -6,7 +6,4 @@ export class Sections extends CjsComponent {
             <section class="sections"></section>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/side/_styles/Sections.css';
 };

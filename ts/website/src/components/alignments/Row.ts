@@ -7,7 +7,4 @@ export class Row extends CjsComponent {
             <div class="row"></div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/alignments/_styles/Row.css';
 };

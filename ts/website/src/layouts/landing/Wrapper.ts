@@ -10,9 +10,6 @@ export class Wrapper extends CjsComponent<Data> {
           <div class="wrapper"></div>
        `;
    }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/Wrapper.css';
 };
 
 Wrapper.fillHeight();

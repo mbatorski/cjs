@@ -6,7 +6,4 @@ export class Filters extends CjsComponent {
             <form class="filters"></form>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/filters/_styles/Filters.css';
 };

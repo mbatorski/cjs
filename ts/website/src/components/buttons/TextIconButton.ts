@@ -26,7 +26,4 @@ export class TextIconButton extends CjsComponent<Data> {
             </button>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/buttons/_styles/TextIconButton.css';
 };

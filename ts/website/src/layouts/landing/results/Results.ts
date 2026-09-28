@@ -49,7 +49,4 @@ export class Results extends CjsComponent {
             ul.appendChild(Result.visualise(publication));
         }
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/results/_styles/Results.css';
 };

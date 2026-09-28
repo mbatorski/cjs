@@ -7,7 +7,4 @@ export class Wrapper extends CjsComponent {
             <nav class="wrapper"></nav>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/top/_styles/Wrapper.css';
 };

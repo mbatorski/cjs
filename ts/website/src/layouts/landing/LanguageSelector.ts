@@ -64,7 +64,4 @@ export class LanguageSelector extends CjsComponent {
             extend: () => element.classList.toggle("extended"),
         });
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/LanguageSelector.css';
 };

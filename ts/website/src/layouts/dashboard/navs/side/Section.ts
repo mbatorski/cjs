@@ -41,7 +41,4 @@ export class Section extends CjsComponent<Data> {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/side/_styles/Section.css';
 };

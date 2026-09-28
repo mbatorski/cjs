@@ -15,7 +15,8 @@ import { CjsLayout } from "./CjsLayout";
 type Constructor<T> = new (...args: any[]) => T;
 type StaticCast<T> = (Constructor<T> & typeof CjsComponent);
 
-const CjsComponentInjectedStylePaths: string[] = [];
+/** Ids of the component classes whose style was already injected into the global style tag */
+const CjsComponentInjectedStyleIds = new Set<string>();
 
 type FilleHeightData = {
     offset: number
@@ -46,6 +47,14 @@ export class CjsComponent<TData = any> {
     public element: HTMLElement | null = null;
 
     static _prototypesData = new Map<Function, PrototypeData>();
+
+    /**
+     * Raw css of the component, bundled at build time.
+     *
+     * Assigned automatically by the `cjsComponentStylesPlugin` Vite plugin when `./_styles/<FileName>.css`
+     * exists next to the component file, or manually through a `?raw` import. Takes precedence over {@link _cssStyle}.
+     */
+    static _bundledCss: string | null = null;
 
     /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
@@ -86,10 +95,20 @@ export class CjsComponent<TData = any> {
     }
 
     /** Passes processed component style to global root style */
-    private async injectRootStyle() {
-        if(!this._cssStyle) return;
+    private injectRootStyle() {
+        const bundledCss = (this.constructor as typeof CjsComponent)._bundledCss;
 
-        const stylePath = this._cssStyle.startsWith("./") ? this._cssStyle.slice(2) : this._cssStyle;
+        if(bundledCss !== null) {
+            this.appendRootStyle(bundledCss);
+            return;
+        }
+
+        if(this._cssStyle) this.fetchRootStyle(this._cssStyle);
+    }
+
+    /** Fetches the component style from the path set in {@link _cssStyle} */
+    private async fetchRootStyle(cssStyle: string) {
+        const stylePath = cssStyle.startsWith("./") ? cssStyle.slice(2) : cssStyle;
         const request = await new CjsRequest(stylePath, "get").doRequest();
 
         if (request.isError()) {
@@ -97,12 +116,16 @@ export class CjsComponent<TData = any> {
             return;
         }
 
-        const cssText = request.text();
+        this.appendRootStyle(request.text());
+    }
+
+    /** Scopes the css to the component and appends it to the global root style */
+    private appendRootStyle(cssText: string) {
         const style = document.head.querySelector<HTMLStyleElement>(`[id="${CjsGlobalStyleTagId}"]`);
 
         if (!style) return;
 
-        style.innerHTML += _CSSProcessor.processComponentStyle(`[${CjsObjectAttributePrefix}*="${this._id}"]`, cssText);
+        style.append(_CSSProcessor.processComponentStyle(`[${CjsObjectAttributePrefix}*="${this._id}"]`, cssText));
     }
 
     /** Provides the HTML string for the component */
@@ -112,14 +135,10 @@ export class CjsComponent<TData = any> {
         const prototypeData = (this.constructor as typeof CjsComponent)._prototypesData.get(this.constructor);
         const onLoadCallbacks: ((cjsEvent: CjsEvent<null>) => any)[] = [];
 
-        if(this._cssStyle) {
-            const alreadyCreatedCssClass = CjsComponentInjectedStylePaths.includes(this._cssStyle);
-            
-            if(!alreadyCreatedCssClass) {
-                this.injectRootStyle();
+        if(!CjsComponentInjectedStyleIds.has(this._id!)) {
+            this.injectRootStyle();
 
-                CjsComponentInjectedStylePaths.push(this._cssStyle);
-            }
+            CjsComponentInjectedStyleIds.add(this._id!);
         }
 
         if(!CjsObjectUtil.isEmpty(this._additionalStyle)) {

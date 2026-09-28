@@ -1,3 +1,4 @@
+import resultsCss from "./_styles/Results.css?raw";
 import { CjsComponent, CjsEventsMap, onLoad, strmap, svg } from "cjs";
 import { Publication } from "../../../types";
 import { App } from "../../../requests/App";
@@ -78,5 +79,5 @@ export class Result extends CjsComponent<Publication> {
     }
 
     /** Settings */
-    _cssStyle = './src/layouts/landing/results/_styles/Results.css';
+    static _bundledCss = resultsCss;
 };

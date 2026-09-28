@@ -8,7 +8,4 @@ export class Nav extends CjsComponent {
             <nav></nav>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/filters/_styles/Nav.css';
 };

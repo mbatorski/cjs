@@ -29,6 +29,4 @@ export class Button extends CjsComponent<Data> {
             
         };
     }
-
-    _cssStyle = "layouts/root/_styles/Button.css";
 }

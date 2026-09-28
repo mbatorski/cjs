@@ -11,7 +11,4 @@ export class MapContent extends CjsComponent<Data> {
           <section class="map-content"></section>
        `;
    }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/MapContent.css';
 };

@@ -16,7 +16,4 @@ export class Logo extends CjsComponent {
             </div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/_styles/Logo.css';
 };

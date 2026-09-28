@@ -47,7 +47,4 @@ export class VerticalCheckboxGroupInput extends CjsComponent<Data> {
             </div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/inputs/_styles/VerticalCheckboxGroupInput.css';
 };

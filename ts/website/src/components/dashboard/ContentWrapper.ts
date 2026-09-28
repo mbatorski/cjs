@@ -7,7 +7,4 @@ export class ContentWrapper extends CjsComponent {
             <div class="content-wrapper"></div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/dashboard/_styles/ContentWrapper.css';
 };

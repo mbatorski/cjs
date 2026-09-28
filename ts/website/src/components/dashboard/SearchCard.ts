@@ -50,7 +50,4 @@ export class SearchCard extends CjsComponent<Data> {
             ]]
         ]).visualise()[0].outerHTML;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/dashboard/_styles/SearchCard.css';
 };

@@ -107,7 +107,4 @@ export class TwoSideRangeInput extends CjsComponent<Data> {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/inputs/_styles/TwoSideRangeInput.css';
 };

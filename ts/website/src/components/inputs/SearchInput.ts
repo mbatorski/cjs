@@ -28,7 +28,4 @@ export class SearchInput extends CjsComponent<Data> {
             </div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/inputs/_styles/SearchInput.css';
 };

@@ -6,7 +6,4 @@ export class ContentSection extends CjsComponent {
             <div class="content-section"></div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/top/_styles/ContentSection.css';
 };

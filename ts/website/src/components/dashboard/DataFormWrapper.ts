@@ -41,7 +41,4 @@ export class DataFormWrapper extends CjsComponent<Data> {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/dashboard/_styles/DataFormWrapper.css';
 };

@@ -8,7 +8,4 @@ export class Latest extends CjsComponent {
             </section>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/side/_styles/Latest.css';
 };

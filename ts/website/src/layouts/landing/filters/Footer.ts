@@ -31,5 +31,4 @@ export class Footer extends CjsComponent {
 
     /** Settings */
     _renderData = this.data;
-    _cssStyle = './src/layouts/landing/filters/_styles/Footer.css';
 };

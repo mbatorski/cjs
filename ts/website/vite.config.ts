@@ -1,26 +1,17 @@
 import { defineConfig } from "vite";
 import path from "path";
-import fs from "fs"
+import fs from "fs";
+import cjsComponentStylesPlugin from "../vite-plugins/cjsComponentStylesPlugin";
 
 export default defineConfig({
   plugins: [
+    cjsComponentStylesPlugin(),
     {
-      name: 'serve-css-anywhere',
-      configureServer(server) {
-        server.middlewares.use((req, res, next) => {
-          if (req.url?.endsWith('.css')) {
-            const cleanUrl = req.url.split('?')[0];
-            const relativePath = cleanUrl.replace(/^\/+/, ''); // remove leading /
-            const filePath = path.join(__dirname, relativePath);
-
-            if (fs.existsSync(filePath)) {
-              res.setHeader('Content-Type', 'text/css');
-              res.end(fs.readFileSync(filePath, { encoding: "utf-8" }))
-              return;
-            }
-          }
-          next();
-        })
+      // Assets are referenced at runtime (e.g. svg("pen") -> "src/assets/svg/pen.svg"), so they are copied as they are
+      name: 'copy-runtime-assets',
+      apply: 'build',
+      closeBundle() {
+        fs.cpSync(path.join(__dirname, "src/assets"), path.join(__dirname, "dist/src/assets"), { recursive: true });
       }
     }
   ],
@@ -28,5 +19,9 @@ export default defineConfig({
     alias: {
       cjs: path.resolve(__dirname, "./lib/cjs.mjs") // map "cjs" → your lib file
     }
+  },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true
   }
 });

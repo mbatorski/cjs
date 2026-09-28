@@ -61,7 +61,4 @@ export class BaseInput extends CjsComponent {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/inputs/_styles/BaseInput.css';
 };

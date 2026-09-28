@@ -59,7 +59,4 @@ export class CardTable extends CjsComponent<Data> {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/dashboard/_styles/CardTable.css';
 };

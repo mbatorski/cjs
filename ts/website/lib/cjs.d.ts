@@ -166,6 +166,13 @@ declare class CjsComponent<TData = any> {
     element: HTMLElement | null;
     static _prototypesData: Map<Function, PrototypeData>;
     /**
+     * Raw css of the component, bundled at build time.
+     *
+     * Assigned automatically by the `cjsComponentStylesPlugin` Vite plugin when `./_styles/<FileName>.css`
+     * exists next to the component file, or manually through a `?raw` import. Takes precedence over {@link _cssStyle}.
+     */
+    static _bundledCss: string | null;
+    /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
      */
     constructor(preSetData?: Partial<TData> | null, additionalStyle?: Partial<Record<keyof CSSStyleDeclaration, string>> | null);
@@ -176,6 +183,10 @@ declare class CjsComponent<TData = any> {
     private createId;
     /** Passes processed component style to global root style */
     private injectRootStyle;
+    /** Fetches the component style from the path set in {@link _cssStyle} */
+    private fetchRootStyle;
+    /** Scopes the css to the component and appends it to the global root style */
+    private appendRootStyle;
     /** Provides the HTML string for the component */
     private getHtml;
     private getConstructorClass;

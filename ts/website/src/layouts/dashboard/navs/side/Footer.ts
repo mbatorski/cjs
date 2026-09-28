@@ -8,7 +8,4 @@ export class Footer extends CjsComponent {
             </footer>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/side/_styles/Footer.css';
 };

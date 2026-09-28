@@ -68,7 +68,4 @@ export class ArchaeologicalDataTable extends CjsComponent<Data> {
             }
         } satisfies CjsEventsMap;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/common/_styles/ArchaeologicalDataTable.css';
 };

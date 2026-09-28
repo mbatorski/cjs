@@ -9,7 +9,4 @@ export class LeftCorner extends CjsComponent {
             </div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/navs/top/_styles/LeftCorner.css';
 };

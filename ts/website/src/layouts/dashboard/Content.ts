@@ -6,7 +6,4 @@ export class Content extends CjsComponent {
             <div class="content"></div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/dashboard/_styles/Content.css';
 };

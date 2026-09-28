@@ -1,3 +1,4 @@
+import resultsCss from "./_styles/Results.css?raw";
 import { CjsComponent, strmap } from "cjs";
 import { ArchaeologicalSite } from "../../../types";
 import { CulturalGroups } from "../../../constants";
@@ -25,5 +26,5 @@ export class ArcheologicalSiteElement extends CjsComponent<Data> {
     }
 
     /** Settings */
-    _cssStyle = './src/layouts/landing/results/_styles/Results.css';
+    static _bundledCss = resultsCss;
 };

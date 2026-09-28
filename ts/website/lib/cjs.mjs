@@ -58,9 +58,9 @@ const m = {
   format(r) {
     return r.replace(/&([0-9a-flnr])/gi, (t, e) => dt[e.toLowerCase()] ?? "") + m.None;
   }
-}, N = "[CJS]";
-_.format(`&e&n${N}&r `);
-const ft = _.format(`&c&n${N}&r `), mt = _.format(`&c&a${N}&r `), pt = _.format(`&c&b${N}&r `), D = "cjs:render", G = "cjsroot", H = "cjs-style", gt = "cjs-style-keyframes", P = "cjsevent-", Y = "cjs_", V = "cjs-id", yt = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", Ct = "abcdefghijklmnopqrstuvwxyz0123456789", x = {
+}, H = "[CJS]";
+_.format(`&e&n${H}&r `);
+const ft = _.format(`&c&n${H}&r `), mt = _.format(`&c&a${H}&r `), pt = _.format(`&c&b${H}&r `), Y = "cjs:render", G = "cjsroot", B = "cjs-style", gt = "cjs-style-keyframes", N = "cjsevent-", F = "cjs_", U = "cjs-id", yt = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", Ct = "abcdefghijklmnopqrstuvwxyz0123456789", x = {
   getRandom(r, t = !0) {
     let e = "";
     const s = t ? Ct : yt, n = s.length;
@@ -153,11 +153,11 @@ const ft = _.format(`&c&n${N}&r `), mt = _.format(`&c&a${N}&r `), pt = _.format(
    */
   addCallback(t) {
     const e = this.#s();
-    return this.#t.set(e, t), ` ${P}${e}`;
+    return this.#t.set(e, t), ` ${N}${e}`;
   }
   addOnAddElementCallback(t) {
     const e = this.#s();
-    return this.#e.set(e, { callback: t }), ` ${P}${e}`;
+    return this.#e.set(e, { callback: t }), ` ${N}${e}`;
   }
   hasCallback(t) {
     return this.#t.has(t);
@@ -175,7 +175,7 @@ const ft = _.format(`&c&n${N}&r `), mt = _.format(`&c&a${N}&r `), pt = _.format(
 function L(r) {
   return E.addOnAddElementCallback(r);
 }
-function Nt(r) {
+function Pt(r) {
   return L((t) => {
     document.addEventListener("keydown", (e) => {
       (e.key === "Escape" || e.key == "Esc") && r(t);
@@ -709,7 +709,7 @@ const wt = {
 }, ot = {
   withCredentials: !1
 };
-class F {
+class X {
   constructor(t, e, s) {
     this.statusCode = t, this.response = e, this.networkError = s;
   }
@@ -843,7 +843,7 @@ class vt {
     if (this.cacheSeconds > 0) {
       const s = this.getCached();
       if (s)
-        return new F(
+        return new X(
           s.statusCode,
           s.data,
           !1
@@ -856,7 +856,7 @@ class vt {
     }), this.onStartCallback(), await new Promise((s) => {
       t.onreadystatechange = () => {
         if (t.readyState !== 4) return;
-        const n = new F(
+        const n = new X(
           t.status,
           t.response,
           t.status === 0
@@ -871,7 +871,7 @@ class vt {
           this.onProgressCallback(o, n.loaded, n.total, n);
         }
       }, t.onerror = () => {
-        const n = new F(0, null, !0);
+        const n = new X(0, null, !0);
         this.onErrorCallback(n), s(null);
       }, this.sendBodyOrFiles(t);
     });
@@ -948,7 +948,7 @@ class kt {
     };
   }
 }
-class X {
+class V {
   #t;
   constructor(t) {
     this.#t = t;
@@ -982,7 +982,7 @@ class X {
     return l;
   }
 }
-const Q = [], K = class K {
+const Q = /* @__PURE__ */ new Set(), P = class P {
   /**
    * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
    */
@@ -1004,21 +1004,33 @@ const Q = [], K = class K {
     }
   }
   /** Passes processed component style to global root style */
-  async injectRootStyle() {
-    if (!this._cssStyle) return;
-    const t = this._cssStyle.startsWith("./") ? this._cssStyle.slice(2) : this._cssStyle, e = await new vt(t, "get").doRequest();
-    if (e.isError()) {
-      y.error(`Error occurred while importing style (&e${t}&r)`);
+  injectRootStyle() {
+    const t = this.constructor._bundledCss;
+    if (t !== null) {
+      this.appendRootStyle(t);
       return;
     }
-    const s = e.text(), n = document.head.querySelector(`[id="${H}"]`);
-    n && (n.innerHTML += St.processComponentStyle(`[${Y}*="${this._id}"]`, s));
+    this._cssStyle && this.fetchRootStyle(this._cssStyle);
+  }
+  /** Fetches the component style from the path set in {@link _cssStyle} */
+  async fetchRootStyle(t) {
+    const e = t.startsWith("./") ? t.slice(2) : t, s = await new vt(e, "get").doRequest();
+    if (s.isError()) {
+      y.error(`Error occurred while importing style (&e${e}&r)`);
+      return;
+    }
+    this.appendRootStyle(s.text());
+  }
+  /** Scopes the css to the component and appends it to the global root style */
+  appendRootStyle(t) {
+    const e = document.head.querySelector(`[id="${B}"]`);
+    e && e.append(St.processComponentStyle(`[${F}*="${this._id}"]`, t));
   }
   /** Provides the HTML string for the component */
   getHtml() {
     let t = this._template();
     const e = this.constructor._prototypesData.get(this.constructor), s = [];
-    if (this._cssStyle && (Q.includes(this._cssStyle) || (this.injectRootStyle(), Q.push(this._cssStyle))), k.isEmpty(this._additionalStyle) || (t = M.injectAttribute(
+    if (Q.has(this._id) || (this.injectRootStyle(), Q.add(this._id)), k.isEmpty(this._additionalStyle) || (t = M.injectAttribute(
       t,
       "style",
       Object.entries(this._additionalStyle).map((n) => `${x.camelStyleToKebabCase(n[0])}: ${n[1]}`).join("; ")
@@ -1033,14 +1045,14 @@ const Q = [], K = class K {
     }
     return t = M.injectAttribute(t, L((n) => {
       s.forEach((o) => o(n)), this.element = n.source;
-    }), ""), t = M.injectAttribute(t, Y, this._id), this._customId !== null && (t = M.injectAttribute(t, V, this._customId)), t;
+    }), ""), t = M.injectAttribute(t, F, this._id), this._customId !== null && (t = M.injectAttribute(t, U, this._customId)), t;
   }
   getConstructorClass() {
     return this.constructor;
   }
   /** Builds the DOM selector used to target the component's rendered elements. */
   getSelector() {
-    return this._customId !== null ? `[${V}="${this._customId}"]` : `[${Y}="${this._id}"]`;
+    return this._customId !== null ? `[${U}="${this._customId}"]` : `[${F}="${this._id}"]`;
   }
   /**
    * 
@@ -1076,7 +1088,7 @@ const Q = [], K = class K {
     const t = this.element;
     return t ? Array.from(
       t.querySelectorAll("form"),
-      (e) => new X(e)
+      (e) => new V(e)
     ) : null;
   }
   getComponents() {
@@ -1151,7 +1163,7 @@ const Q = [], K = class K {
   get forms() {
     return Array.from(
       $.HTMLToElement(this.getHtml()).querySelectorAll("form"),
-      (t) => new X(t)
+      (t) => new V(t)
     );
   }
   /** Provides all event handlers for the component */
@@ -1185,7 +1197,7 @@ const Q = [], K = class K {
     const e = Array.from(t.querySelectorAll("form"));
     return t.tagName === "FORM" && e.push(t), Array.from(
       e,
-      (s) => new X(s)
+      (s) => new V(s)
     );
   }
   static getComponents() {
@@ -1249,9 +1261,9 @@ const Q = [], K = class K {
     return this.getInstance().getAll();
   }
 };
-K._prototypesData = /* @__PURE__ */ new Map();
-let U = K;
-class W {
+P._prototypesData = /* @__PURE__ */ new Map(), P._bundledCss = null;
+let W = P;
+class z {
   /**
    * @param elements Function returning layout structure
    */
@@ -1285,26 +1297,26 @@ class W {
       return l[Symbol.toStringTag] === "AsyncFunction";
     }
     const n = (l, a) => {
-      if (!(l instanceof U))
+      if (!(l instanceof W))
         return y.error("The element should be CjsComponent, but passed", l), [this.createErrorElement()];
       const i = l.visualise();
       if (a.length === 2) {
-        let u = i.getElementsByTagName(D)[0];
+        let u = i.getElementsByTagName(Y)[0];
         const h = a[1];
         if (!Array.isArray(h))
           return y.error("Layout sub components at second argument have to be Array"), [i];
         h.forEach((d, f) => {
           if (d === null) return;
           const p = f === h.length - 1, S = d[0], g = o(d);
-          if (S instanceof W) {
+          if (S instanceof z) {
             for (const C of g)
               i.insertAdjacentElement("beforeend", C);
             return;
           }
-          if (u = i.getElementsByTagName(D)[0], u) {
+          if (u = i.getElementsByTagName(Y)[0], u) {
             p || u.insertAdjacentElement(
               "afterend",
-              document.createElement(D)
+              document.createElement(Y)
             );
             for (const C of g)
               u.insertAdjacentElement("afterend", C);
@@ -1321,7 +1333,7 @@ class W {
       if (l.length === 0)
         return y.error("Layout have an empty component space"), [this.createErrorElement()];
       const a = l[0];
-      if (a instanceof W)
+      if (a instanceof z)
         return a.visualise();
       if (s(a)) {
         const c = document.createElement("cjsasyncelement");
@@ -1360,7 +1372,7 @@ class W {
     }
     if (this._customId !== null)
       for (const l of this._layoutObjects)
-        l.setAttribute(V, this._customId);
+        l.setAttribute(U, this._customId);
     if (this._onAfterLoadCallback) {
       const l = E.addOnAddElementCallback(this._onAfterLoadCallback).trim();
       this._layoutObjects[0].setAttribute(l, "");
@@ -1381,28 +1393,28 @@ class W {
     e.remove();
   }
 }
-let z = !1;
+let K = !1;
 function tt() {
-  if (z) return null;
+  if (K) return null;
   const r = document.head.appendChild(
-    $.HTMLToElement(`<style id="${H}"></style>`)
+    $.HTMLToElement(`<style id="${B}"></style>`)
   );
-  return z = !0, r;
+  return K = !0, r;
 }
 const at = {
   create() {
     tt();
   },
   appendStyle(r) {
-    if (!z) {
+    if (!K) {
       tt().innerHTML += r;
       return;
     }
-    const t = document.getElementById(H);
+    const t = document.getElementById(B);
     t.innerHTML += r;
   }
 };
-class B {
+class q {
   /**
    * Adds CSS style rules to plugin style container
    */
@@ -1414,7 +1426,7 @@ ${n}`);
     }
   }
 }
-class Et extends B {
+class Et extends q {
   constructor() {
     super(...arguments), this.attribute = "ripple", this.animationTime = 400, this.cssVariables = {
       s: "sx",
@@ -1516,7 +1528,7 @@ class I {
     const e = t.reversed ?? !1;
     this.entries.length > 100 && y.error("CjsKeyFrame cannot have more than 100 entries");
     const s = document.head.querySelector(
-      `[id="${H}"]`
+      `[id="${B}"]`
     );
     if (!s)
       throw new Error("Keyframes style element not found");
@@ -1552,7 +1564,7 @@ ${O}`, st.push({
     }), R;
   }
 }
-class $t extends B {
+class $t extends q {
   constructor() {
     super(), this.attribute = "scale", this.animationTime = 350, this.scales = {
       start: 0.85,
@@ -1601,7 +1613,7 @@ const Lt = {
     });
   }
 };
-class _t extends B {
+class _t extends q {
   constructor() {
     super(...arguments), this.containerId = "cjs-notification-plugin-container", this.keyframe = {
       name: "cjs-notification-plugin",
@@ -1716,7 +1728,7 @@ class _t extends B {
     this.addStyles();
   }
 }
-class xt extends B {
+class xt extends q {
   constructor() {
     super(...arguments), this.attribute = "hover", this.animationTime = 350, this.hoverScale = 0.95;
   }
@@ -1785,20 +1797,20 @@ const ie = new Tt(), Mt = {
     return r.startsWith("./") ? r.slice(2) : r.startsWith("/") ? r.slice(1) : r;
   }
 };
-function q(r) {
+function D(r) {
   return `src/assets/${Mt.toFixedPath(r)}`;
 }
 function oe(r) {
-  return q(`svg/${r}.svg`);
+  return D(`svg/${r}.svg`);
 }
 function ae(r) {
-  return q(`images/${r}.png`);
+  return D(`images/${r}.png`);
 }
 function ce(r) {
-  return q(`images/${r}.jpg`);
+  return D(`images/${r}.jpg`);
 }
 function le(r) {
-  return q(`gif/${r}.gif`);
+  return D(`gif/${r}.gif`);
 }
 const ue = {
   async download(r, t = null) {
@@ -2108,11 +2120,11 @@ const Se = {
   processElementEvents(t) {
     const e = $.getAttributesStartingWith(
       t,
-      P
+      N
     );
     if (e.length !== 0)
       for (const s of e) {
-        const n = Array.from(document.body.querySelectorAll(`[${s}]`)), o = s.replace(P, "");
+        const n = Array.from(document.body.querySelectorAll(`[${s}]`)), o = s.replace(N, "");
         for (const l of n)
           l.removeAttribute(s), this.#e(o, l), this.#s(o, l);
       }
@@ -2136,11 +2148,11 @@ function It(r) {
 }
 export {
   ie as CjsAnimation,
-  U as CjsComponent,
+  W as CjsComponent,
   ue as CjsDownload,
   A as CjsGlobals,
   I as CjsKeyFrame,
-  W as CjsLayout,
+  z as CjsLayout,
   de as CjsMobile,
   jt as CjsNotification,
   k as CjsObjectUtil,
@@ -2153,7 +2165,7 @@ export {
   be as CjsValidator,
   we as CjsWebSocket,
   Se as CjsWindow,
-  q as asset,
+  D as asset,
   he as createHandle,
   le as gif,
   It as init,
@@ -2161,7 +2173,7 @@ export {
   Vt as onChange,
   Ut as onClick,
   Wt as onDoubleClick,
-  Nt as onEscape,
+  Pt as onEscape,
   zt as onFocus,
   Kt as onFocusOut,
   Ht as onHoldDown,

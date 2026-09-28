@@ -6,7 +6,4 @@ export class Column extends CjsComponent {
             <div class="column"></div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/alignments/_styles/Column.css';
 };

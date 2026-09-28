@@ -29,7 +29,4 @@ export class Card extends CjsComponent<Data> {
             </section>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/components/dashboard/_styles/Card.css';
 };

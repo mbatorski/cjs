@@ -88,9 +88,6 @@ export class LeafletMap extends CjsComponent<Data> {
             } 
         });
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/LeafletMap.css';
 };
 
 LeafletMap.fillHeight();

@@ -7,7 +7,4 @@ export class Wrapper extends CjsComponent {
             <div class="wrapper"></div>
         `;
     }
-
-    /** Settings */
-    _cssStyle = './src/layouts/landing/filters/_styles/Wrapper.css';
 };
