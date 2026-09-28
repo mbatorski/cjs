@@ -1,7 +1,7 @@
 import { Constructor } from "../types";
 import { CjsComponent } from "./CjsComponent";
 import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
-import { CjsComponentReRenderTag, CjsObjectAttributePrefix } from "../constants";
+import { CjsComponentReRenderTag, CjsCustomIdAttributePrefix, CjsObjectAttributePrefix } from "../constants";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { CjsEventsManager } from "../events/CjsEventsManager";
 
@@ -14,6 +14,9 @@ export class CjsLayout<TData = any> {
 
     public _preSetData: TData | null = null;
     public _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null = null;
+
+    /** Custom, user-defined id assigned through {@link withId}. Used to target specific layouts. */
+    public _customId: string | null = null;
 
     public _layoutObjects: Element[] = [];
 
@@ -33,6 +36,12 @@ export class CjsLayout<TData = any> {
 
     public withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) {
         this._additionalStyle = additionalStyle;
+        return this;
+    }
+
+    /** Assigns a custom id to the layout's root elements so they can be targeted later */
+    public withId(id: any): this {
+        this._customId = (id === null || id === undefined) ? null : String(id);
         return this;
     }
 
@@ -193,6 +202,12 @@ export class CjsLayout<TData = any> {
             }
 
             this._additionalStyle = null;
+        }
+
+        if(this._customId !== null) {
+            for(const layoutObject of this._layoutObjects) {
+                layoutObject.setAttribute(CjsCustomIdAttributePrefix, this._customId);
+            }
         }
 
         if(this._onAfterLoadCallback) {

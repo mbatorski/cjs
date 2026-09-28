@@ -120,6 +120,8 @@ declare class CjsLayout<TData = any> {
     _onAfterLoadCallback: (() => any) | null;
     _preSetData: TData | null;
     _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null;
+    /** Custom, user-defined id assigned through {@link withId}. Used to target specific layouts. */
+    _customId: string | null;
     _layoutObjects: Element[];
     elements: (data: TData) => CjsLayoutNode[][];
     /**
@@ -128,6 +130,8 @@ declare class CjsLayout<TData = any> {
     constructor(elements: (data: TData | null) => CjsLayoutNode[][]);
     withData(preSetData: TData): CjsLayout;
     withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>): this;
+    /** Assigns a custom id to the layout's root elements so they can be targeted later */
+    withId(id: any): this;
     private createErrorElement;
     /**
      * Build DOM structure

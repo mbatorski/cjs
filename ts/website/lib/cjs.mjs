@@ -60,7 +60,7 @@ const m = {
   }
 }, N = "[CJS]";
 _.format(`&e&n${N}&r `);
-const ft = _.format(`&c&n${N}&r `), mt = _.format(`&c&a${N}&r `), pt = _.format(`&c&b${N}&r `), D = "cjs:render", K = "cjsroot", H = "cjs-style", gt = "cjs-style-keyframes", P = "cjsevent-", Y = "cjs_", G = "cjs-id", yt = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", Ct = "abcdefghijklmnopqrstuvwxyz0123456789", x = {
+const ft = _.format(`&c&n${N}&r `), mt = _.format(`&c&a${N}&r `), pt = _.format(`&c&b${N}&r `), D = "cjs:render", G = "cjsroot", H = "cjs-style", gt = "cjs-style-keyframes", P = "cjsevent-", Y = "cjs_", V = "cjs-id", yt = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", Ct = "abcdefghijklmnopqrstuvwxyz0123456789", x = {
   getRandom(r, t = !0) {
     let e = "";
     const s = t ? Ct : yt, n = s.length;
@@ -529,19 +529,19 @@ const wt = {
           `${r}${h ? "" : " "}${c.trim()}`
         ];
         if (!h) {
-          const f = c.split(" "), p = f[0], S = f.slice(1).join(" "), g = p.includes(":") ? p.slice(p.indexOf(":")) : "", C = p.replace(g, ""), k = `${g} ${S}`, j = k.split(",").map((O) => O.trim()).slice(1), R = k.includes(",") ? j.map((O) => {
+          const f = c.split(" "), p = f[0], S = f.slice(1).join(" "), g = p.includes(":") ? p.slice(p.indexOf(":")) : "", C = p.replace(g, ""), v = `${g} ${S}`, j = v.split(",").map((O) => O.trim()).slice(1), R = v.includes(",") ? j.map((O) => {
             const b = [
               `${C}${r}`,
               `${O.replace(C, "")}`
             ], T = !b[1].startsWith(":");
             return b.join(T ? " " : "");
           }) : "";
-          k.includes(",") ? d.push(
-            `${C}${r}${k.replace(
+          v.includes(",") ? d.push(
+            `${C}${r}${v.replace(
               j,
               R
             )}`
-          ) : d.push(`${C}${r}${k}`);
+          ) : d.push(`${C}${r}${v}`);
         }
         return d;
       }).map((c) => `${c.join(", ")} { ${a} }`).flat();
@@ -637,7 +637,7 @@ const wt = {
     }
     return r.slice(0, o) + u + r.slice(l);
   }
-}, v = {
+}, k = {
   /**
    * Returns values from keys if the value is not an object
    */
@@ -748,7 +748,7 @@ class F {
     this.statusCode === t && e();
   }
 }
-class kt {
+class vt {
   constructor(t, e) {
     this.url = t, this.method = e, this.onStartCallback = () => {
     }, this.onEndCallback = () => {
@@ -888,7 +888,7 @@ const ne = {
     ot.withCredentials = r;
   }
 };
-class vt {
+class kt {
   constructor(t) {
     this.components = Array.from(t);
   }
@@ -982,12 +982,12 @@ class X {
     return l;
   }
 }
-const Q = [], z = class z {
+const Q = [], K = class K {
   /**
    * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
    */
   constructor(t = null, e = null) {
-    this.__events = {}, this._cssStyle = null, this._additionalStyle = {}, this._defaultData = {}, this._preSetData = {}, this._id = null, this._customId = null, this.element = null, t && (this._preSetData = v.copy(t)), e && (this._additionalStyle = v.copy(e)), this.createId();
+    this.__events = {}, this._cssStyle = null, this._additionalStyle = {}, this._defaultData = {}, this._preSetData = {}, this._id = null, this._customId = null, this.element = null, t && (this._preSetData = k.copy(t)), e && (this._additionalStyle = k.copy(e)), this.createId();
   }
   /**
    * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
@@ -1006,7 +1006,7 @@ const Q = [], z = class z {
   /** Passes processed component style to global root style */
   async injectRootStyle() {
     if (!this._cssStyle) return;
-    const t = this._cssStyle.startsWith("./") ? this._cssStyle.slice(2) : this._cssStyle, e = await new kt(t, "get").doRequest();
+    const t = this._cssStyle.startsWith("./") ? this._cssStyle.slice(2) : this._cssStyle, e = await new vt(t, "get").doRequest();
     if (e.isError()) {
       y.error(`Error occurred while importing style (&e${t}&r)`);
       return;
@@ -1018,7 +1018,7 @@ const Q = [], z = class z {
   getHtml() {
     let t = this._template();
     const e = this.constructor._prototypesData.get(this.constructor), s = [];
-    if (this._cssStyle && (Q.includes(this._cssStyle) || (this.injectRootStyle(), Q.push(this._cssStyle))), v.isEmpty(this._additionalStyle) || (t = M.injectAttribute(
+    if (this._cssStyle && (Q.includes(this._cssStyle) || (this.injectRootStyle(), Q.push(this._cssStyle))), k.isEmpty(this._additionalStyle) || (t = M.injectAttribute(
       t,
       "style",
       Object.entries(this._additionalStyle).map((n) => `${x.camelStyleToKebabCase(n[0])}: ${n[1]}`).join("; ")
@@ -1033,14 +1033,14 @@ const Q = [], z = class z {
     }
     return t = M.injectAttribute(t, L((n) => {
       s.forEach((o) => o(n)), this.element = n.source;
-    }), ""), t = M.injectAttribute(t, Y, this._id), this._customId !== null && (t = M.injectAttribute(t, G, this._customId)), t;
+    }), ""), t = M.injectAttribute(t, Y, this._id), this._customId !== null && (t = M.injectAttribute(t, V, this._customId)), t;
   }
   getConstructorClass() {
     return this.constructor;
   }
   /** Builds the DOM selector used to target the component's rendered elements. */
   getSelector() {
-    return this._customId !== null ? `[${G}="${this._customId}"]` : `[${Y}="${this._id}"]`;
+    return this._customId !== null ? `[${V}="${this._customId}"]` : `[${Y}="${this._id}"]`;
   }
   /**
    * 
@@ -1080,7 +1080,7 @@ const Q = [], z = class z {
     ) : null;
   }
   getComponents() {
-    return new vt(document.body.querySelectorAll(this.getSelector()));
+    return new kt(document.body.querySelectorAll(this.getSelector()));
   }
   /** Assigns a custom id to the component so it can be targeted later through {@link CjsComponent.getId} */
   withId(t) {
@@ -1088,11 +1088,11 @@ const Q = [], z = class z {
   }
   /** Sets the data for the component */
   withData(t = null) {
-    return t && (this._preSetData = v.copy(t)), this;
+    return t && (this._preSetData = k.copy(t)), this;
   }
   /** Sets additional style for the component */
   withStyle(t) {
-    return this._additionalStyle = v.copy(t), this;
+    return this._additionalStyle = k.copy(t), this;
   }
   /** Example: render HTML string */
   render(t = null) {
@@ -1101,7 +1101,7 @@ const Q = [], z = class z {
   }
   /** Example: visualise component as element */
   visualise(t = null) {
-    return t && (this._preSetData = v.copy(t)), $.HTMLToElement(this.getHtml());
+    return t && (this._preSetData = k.copy(t)), $.HTMLToElement(this.getHtml());
   }
   /** Example: querySelector logic */
   querySelector(t) {
@@ -1123,7 +1123,7 @@ const Q = [], z = class z {
    * If multiple components match, each one is looped through and replaced individually.
    */
   reRender(t = null) {
-    return t && (this._preSetData = v.copy(t)), this.getAll().forEach((s) => {
+    return t && (this._preSetData = k.copy(t)), this.getAll().forEach((s) => {
       const n = $.HTMLToElement(this.getHtml());
       s.replaceWith(n);
     }), this;
@@ -1143,8 +1143,8 @@ const Q = [], z = class z {
    */
   /** Provides merged component data including default data and pre-set data */
   get data() {
-    return v.copy(
-      v.join(this._defaultData, this._preSetData)
+    return k.copy(
+      k.join(this._defaultData, this._preSetData)
     );
   }
   /** Provides all form elements within the component as CjsForm instances */
@@ -1249,20 +1249,24 @@ const Q = [], z = class z {
     return this.getInstance().getAll();
   }
 };
-z._prototypesData = /* @__PURE__ */ new Map();
-let V = z;
-class U {
+K._prototypesData = /* @__PURE__ */ new Map();
+let U = K;
+class W {
   /**
    * @param elements Function returning layout structure
    */
   constructor(t) {
-    this._onBeforeLoadCallback = null, this._onAfterLoadCallback = null, this._preSetData = null, this._additionalStyle = null, this._layoutObjects = [], this.elements = t;
+    this._onBeforeLoadCallback = null, this._onAfterLoadCallback = null, this._preSetData = null, this._additionalStyle = null, this._customId = null, this._layoutObjects = [], this.elements = t;
   }
   withData(t) {
     return this._preSetData = t, this;
   }
   withStyle(t) {
     return this._additionalStyle = t, this;
+  }
+  /** Assigns a custom id to the layout's root elements so they can be targeted later */
+  withId(t) {
+    return this._customId = t == null ? null : String(t), this;
   }
   createErrorElement() {
     return document.createElement("cjslayouterror");
@@ -1281,7 +1285,7 @@ class U {
       return l[Symbol.toStringTag] === "AsyncFunction";
     }
     const n = (l, a) => {
-      if (!(l instanceof V))
+      if (!(l instanceof U))
         return y.error("The element should be CjsComponent, but passed", l), [this.createErrorElement()];
       const i = l.visualise();
       if (a.length === 2) {
@@ -1292,7 +1296,7 @@ class U {
         h.forEach((d, f) => {
           if (d === null) return;
           const p = f === h.length - 1, S = d[0], g = o(d);
-          if (S instanceof U) {
+          if (S instanceof W) {
             for (const C of g)
               i.insertAdjacentElement("beforeend", C);
             return;
@@ -1317,7 +1321,7 @@ class U {
       if (l.length === 0)
         return y.error("Layout have an empty component space"), [this.createErrorElement()];
       const a = l[0];
-      if (a instanceof U)
+      if (a instanceof W)
         return a.visualise();
       if (s(a)) {
         const c = document.createElement("cjsasyncelement");
@@ -1354,6 +1358,9 @@ class U {
       }
       this._additionalStyle = null;
     }
+    if (this._customId !== null)
+      for (const l of this._layoutObjects)
+        l.setAttribute(V, this._customId);
     if (this._onAfterLoadCallback) {
       const l = E.addOnAddElementCallback(this._onAfterLoadCallback).trim();
       this._layoutObjects[0].setAttribute(l, "");
@@ -1374,20 +1381,20 @@ class U {
     e.remove();
   }
 }
-let W = !1;
+let z = !1;
 function tt() {
-  if (W) return null;
+  if (z) return null;
   const r = document.head.appendChild(
     $.HTMLToElement(`<style id="${H}"></style>`)
   );
-  return W = !0, r;
+  return z = !0, r;
 }
 const at = {
   create() {
     tt();
   },
   appendStyle(r) {
-    if (!W) {
+    if (!z) {
       tt().innerHTML += r;
       return;
     }
@@ -1534,13 +1541,13 @@ ${b}`, et.push({
     }
     const d = n[n.length - 1], f = this.isImportant ? " !important" : "", p = Object.entries(d).map(([b, T]) => `${b}: ${T};`).join(" "), g = [`animation: ${h} ${this.duration / 1e3}s ${this.timingFunction}${f}`];
     this.keepEndingEntryStyle && g.push(p);
-    const C = `{ ${g.join("; ")} }`, k = x.getHash(`${this.selector}-${C}`), j = st.find((b) => b.hash === k);
+    const C = `{ ${g.join("; ")} }`, v = x.getHash(`${this.selector}-${C}`), j = st.find((b) => b.hash === v);
     if (j)
       return j.class;
-    const R = `${h}-${k}`, O = `.${R} ${this.selector} ${C}`;
+    const R = `${h}-${v}`, O = `.${R} ${this.selector} ${C}`;
     return s.innerHTML += `
 ${O}`, st.push({
-      hash: k,
+      hash: v,
       class: R
     }), R;
   }
@@ -2118,9 +2125,9 @@ const Se = {
   }
 }();
 function It(r) {
-  const t = document.body.querySelector(K);
+  const t = document.body.querySelector(G);
   if (!t)
-    return document.body.appendChild(document.createElement(K)), It(r);
+    return document.body.appendChild(document.createElement(G)), It(r);
   at.create(), t.innerHTML = "", rt.observe();
   for (const e of r.visualise())
     t.appendChild(e), Array.from(e.querySelectorAll("*")).forEach((s) => {
@@ -2129,16 +2136,16 @@ function It(r) {
 }
 export {
   ie as CjsAnimation,
-  V as CjsComponent,
+  U as CjsComponent,
   ue as CjsDownload,
   A as CjsGlobals,
   I as CjsKeyFrame,
-  U as CjsLayout,
+  W as CjsLayout,
   de as CjsMobile,
   jt as CjsNotification,
-  v as CjsObjectUtil,
+  k as CjsObjectUtil,
   re as CjsPluginManager,
-  kt as CjsRequest,
+  vt as CjsRequest,
   ne as CjsRequests,
   fe as CjsSearch,
   x as CjsStringUtil,
