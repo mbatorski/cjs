@@ -529,19 +529,19 @@ const wt = {
           `${r}${h ? "" : " "}${c.trim()}`
         ];
         if (!h) {
-          const f = c.split(" "), p = f[0], S = f.slice(1).join(" "), g = p.includes(":") ? p.slice(p.indexOf(":")) : "", C = p.replace(g, ""), v = `${g} ${S}`, j = v.split(",").map((O) => O.trim()).slice(1), R = v.includes(",") ? j.map((O) => {
+          const f = c.split(" "), p = f[0], S = f.slice(1).join(" "), g = p.includes(":") ? p.slice(p.indexOf(":")) : "", C = p.replace(g, ""), k = `${g} ${S}`, j = k.split(",").map((O) => O.trim()).slice(1), R = k.includes(",") ? j.map((O) => {
             const b = [
               `${C}${r}`,
               `${O.replace(C, "")}`
             ], T = !b[1].startsWith(":");
             return b.join(T ? " " : "");
           }) : "";
-          v.includes(",") ? d.push(
-            `${C}${r}${v.replace(
+          k.includes(",") ? d.push(
+            `${C}${r}${k.replace(
               j,
               R
             )}`
-          ) : d.push(`${C}${r}${v}`);
+          ) : d.push(`${C}${r}${k}`);
         }
         return d;
       }).map((c) => `${c.join(", ")} { ${a} }`).flat();
@@ -637,7 +637,7 @@ const wt = {
     }
     return r.slice(0, o) + u + r.slice(l);
   }
-}, k = {
+}, v = {
   /**
    * Returns values from keys if the value is not an object
    */
@@ -748,7 +748,7 @@ class X {
     this.statusCode === t && e();
   }
 }
-class vt {
+class kt {
   constructor(t, e) {
     this.url = t, this.method = e, this.onStartCallback = () => {
     }, this.onEndCallback = () => {
@@ -888,7 +888,7 @@ const ne = {
     ot.withCredentials = r;
   }
 };
-class kt {
+class vt {
   constructor(t) {
     this.components = Array.from(t);
   }
@@ -981,13 +981,37 @@ class V {
     }
     return l;
   }
+  /**
+   * The **`checkValidity()`** method of the HTMLFormElement interface returns a boolean value which indicates if all associated controls meet any constraint validation rules applied to them. The method also fires an invalid event on each invalid element, but not on the form element itself. Because there's no default browser behavior for checkValidity(), canceling this invalid event has no effect.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/checkValidity)
+   */
+  checkValidity() {
+    return this.#t.checkValidity();
+  }
+  /**
+   * The **`reportValidity()`** method of the HTMLFormElement interface performs the same validity checking steps as the checkValidity() method. In addition, for each invalid event that was fired and not canceled, the browser displays the problem to the user.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/reportValidity)
+   */
+  reportValidity() {
+    return this.#t.reportValidity();
+  }
+  /**
+   * The **`HTMLFormElement.reset()`** method restores a form element's default values. This method does the same thing as clicking the form's <input type="reset"> control.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/reset)
+   */
+  reset() {
+    return this.#t.reset();
+  }
 }
 const Q = /* @__PURE__ */ new Set(), P = class P {
   /**
    * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
    */
   constructor(t = null, e = null) {
-    this.__events = {}, this._cssStyle = null, this._additionalStyle = {}, this._defaultData = {}, this._preSetData = {}, this._id = null, this._customId = null, this.element = null, t && (this._preSetData = k.copy(t)), e && (this._additionalStyle = k.copy(e)), this.createId();
+    this.__events = {}, this._cssStyle = null, this._additionalStyle = {}, this._defaultData = {}, this._preSetData = {}, this._id = null, this._customId = null, this.element = null, t && (this._preSetData = v.copy(t)), e && (this._additionalStyle = v.copy(e)), this.createId();
   }
   /**
    * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
@@ -1014,7 +1038,7 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
   }
   /** Fetches the component style from the path set in {@link _cssStyle} */
   async fetchRootStyle(t) {
-    const e = t.startsWith("./") ? t.slice(2) : t, s = await new vt(e, "get").doRequest();
+    const e = t.startsWith("./") ? t.slice(2) : t, s = await new kt(e, "get").doRequest();
     if (s.isError()) {
       y.error(`Error occurred while importing style (&e${e}&r)`);
       return;
@@ -1030,7 +1054,7 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
   getHtml() {
     let t = this._template();
     const e = this.constructor._prototypesData.get(this.constructor), s = [];
-    if (Q.has(this._id) || (this.injectRootStyle(), Q.add(this._id)), k.isEmpty(this._additionalStyle) || (t = M.injectAttribute(
+    if (Q.has(this._id) || (this.injectRootStyle(), Q.add(this._id)), v.isEmpty(this._additionalStyle) || (t = M.injectAttribute(
       t,
       "style",
       Object.entries(this._additionalStyle).map((n) => `${x.camelStyleToKebabCase(n[0])}: ${n[1]}`).join("; ")
@@ -1092,7 +1116,7 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
     ) : null;
   }
   getComponents() {
-    return new kt(document.body.querySelectorAll(this.getSelector()));
+    return new vt(document.body.querySelectorAll(this.getSelector()));
   }
   /** Assigns a custom id to the component so it can be targeted later through {@link CjsComponent.getId} */
   withId(t) {
@@ -1100,11 +1124,11 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
   }
   /** Sets the data for the component */
   withData(t = null) {
-    return t && (this._preSetData = k.copy(t)), this;
+    return t && (this._preSetData = v.copy(t)), this;
   }
   /** Sets additional style for the component */
   withStyle(t) {
-    return this._additionalStyle = k.copy(t), this;
+    return this._additionalStyle = v.copy(t), this;
   }
   /** Example: render HTML string */
   render(t = null) {
@@ -1113,7 +1137,7 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
   }
   /** Example: visualise component as element */
   visualise(t = null) {
-    return t && (this._preSetData = k.copy(t)), $.HTMLToElement(this.getHtml());
+    return t && (this._preSetData = v.copy(t)), $.HTMLToElement(this.getHtml());
   }
   /** Example: querySelector logic */
   querySelector(t) {
@@ -1135,7 +1159,7 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
    * If multiple components match, each one is looped through and replaced individually.
    */
   reRender(t = null) {
-    return t && (this._preSetData = k.copy(t)), this.getAll().forEach((s) => {
+    return t && (this._preSetData = v.copy(t)), this.getAll().forEach((s) => {
       const n = $.HTMLToElement(this.getHtml());
       s.replaceWith(n);
     }), this;
@@ -1155,8 +1179,8 @@ const Q = /* @__PURE__ */ new Set(), P = class P {
    */
   /** Provides merged component data including default data and pre-set data */
   get data() {
-    return k.copy(
-      k.join(this._defaultData, this._preSetData)
+    return v.copy(
+      v.join(this._defaultData, this._preSetData)
     );
   }
   /** Provides all form elements within the component as CjsForm instances */
@@ -1553,13 +1577,13 @@ ${b}`, et.push({
     }
     const d = n[n.length - 1], f = this.isImportant ? " !important" : "", p = Object.entries(d).map(([b, T]) => `${b}: ${T};`).join(" "), g = [`animation: ${h} ${this.duration / 1e3}s ${this.timingFunction}${f}`];
     this.keepEndingEntryStyle && g.push(p);
-    const C = `{ ${g.join("; ")} }`, v = x.getHash(`${this.selector}-${C}`), j = st.find((b) => b.hash === v);
+    const C = `{ ${g.join("; ")} }`, k = x.getHash(`${this.selector}-${C}`), j = st.find((b) => b.hash === k);
     if (j)
       return j.class;
-    const R = `${h}-${v}`, O = `.${R} ${this.selector} ${C}`;
+    const R = `${h}-${k}`, O = `.${R} ${this.selector} ${C}`;
     return s.innerHTML += `
 ${O}`, st.push({
-      hash: v,
+      hash: k,
       class: R
     }), R;
   }
@@ -2155,9 +2179,9 @@ export {
   z as CjsLayout,
   de as CjsMobile,
   jt as CjsNotification,
-  k as CjsObjectUtil,
+  v as CjsObjectUtil,
   re as CjsPluginManager,
-  vt as CjsRequest,
+  kt as CjsRequest,
   ne as CjsRequests,
   fe as CjsSearch,
   x as CjsStringUtil,

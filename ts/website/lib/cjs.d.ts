@@ -112,6 +112,24 @@ declare class CjsForm {
     #private;
     constructor(element: HTMLFormElement);
     serialize(options?: CjsFormSerializeOptions): Record<string | number, any>;
+    /**
+     * The **`checkValidity()`** method of the HTMLFormElement interface returns a boolean value which indicates if all associated controls meet any constraint validation rules applied to them. The method also fires an invalid event on each invalid element, but not on the form element itself. Because there's no default browser behavior for checkValidity(), canceling this invalid event has no effect.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/checkValidity)
+     */
+    checkValidity(): boolean;
+    /**
+     * The **`reportValidity()`** method of the HTMLFormElement interface performs the same validity checking steps as the checkValidity() method. In addition, for each invalid event that was fired and not canceled, the browser displays the problem to the user.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/reportValidity)
+     */
+    reportValidity(): boolean;
+    /**
+     * The **`HTMLFormElement.reset()`** method restores a form element's default values. This method does the same thing as clicking the form's <input type="reset"> control.
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/reset)
+     */
+    reset(): void;
 }
 
 type CjsLayoutNode = Constructor$1<CjsComponent> | CjsComponent | CjsLayout | (() => Promise<CjsLayoutNode>) | null | CjsLayoutNode[];
