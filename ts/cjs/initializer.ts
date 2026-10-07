@@ -1,4 +1,5 @@
 import { CjsGlobalStyleTagId, CjsRootTag } from "./constants";
+import { CjsIntersectionListener } from "./listeners/CjsIntersectionListener";
 import { CjsMutationListener } from "./listeners/CjsMutationListener";
 import { CjsLayout } from "./objects/CjsLayout";
 import { _CjsGlobalStyleUtil } from "./utils/protected/_CjsGlobalStyleUtil";
@@ -26,4 +27,6 @@ export function init(layout: CjsLayout) {
             CjsMutationListener.processElementEvents(e);
         });
     }
+
+    CjsIntersectionListener.observeAll();
 }

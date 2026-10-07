@@ -2,6 +2,7 @@ import { CjsEventAttributePrefix } from "../constants";
 import { CjsEventsManager } from "../events/CjsEventsManager";
 import { AnyHTMLElement, CjsEvent } from "../types";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
+import { CjsIntersectionListener } from "./CjsIntersectionListener";
 
 export const CjsMutationListener = new class CjsMutationListener {
     #observer: MutationObserver;
@@ -61,10 +62,22 @@ export const CjsMutationListener = new class CjsMutationListener {
         this.processForms();
 
         const childListMutations = mutationsList.filter(m => m.type === "childList");
-        const modifiedNodes = childListMutations
-            .filter(m => m.type === "childList")
+        const addedNodes = childListMutations
             .flatMap(m => Array.from(m.addedNodes))
-            .filter((node): node is HTMLElement => node.nodeType === 1)
+            .filter((node): node is HTMLElement => node.nodeType === 1);
+        const removedNodes = childListMutations
+            .flatMap(m => Array.from(m.removedNodes))
+            .filter((node): node is HTMLElement => node.nodeType === 1);
+
+        for (const removedNode of removedNodes) {
+            CjsIntersectionListener.unobserve(removedNode);
+        }
+
+        for (const addedNode of addedNodes) {
+            CjsIntersectionListener.observe(addedNode);
+        }
+
+        const modifiedNodes = addedNodes
             .flatMap(node => [
                 node,
                 ...Array.from(node.querySelectorAll("*"))
